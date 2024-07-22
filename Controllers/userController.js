@@ -1,5 +1,5 @@
 import user from "../Models/userSchema.js";
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import mail from "../Services/nodemailer.js";
 import dotenv from 'dotenv'
