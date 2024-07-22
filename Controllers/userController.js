@@ -22,7 +22,7 @@ export const register_NewUser = async(req,res)=>{
             return res.status(401).json({message:'User already exist!'})
         }
 
-        const hashPassword = await bcrypt.hash(password,10)
+        const hashPassword = bcrypt.hash(password,10)
 
         const newUser = new user({
             fname,
@@ -60,7 +60,7 @@ export const login_User = async(req,res)=>{
             .json({status:'false',message:"user not exist"})
         }
 
-        const isPasswordMatch = await bcrypt.compare(password,oldUsers.password)
+        const isPasswordMatch = bcrypt.compare(password,oldUsers.password)
 
         // console.log("pass",isPasswordMatch);
 
