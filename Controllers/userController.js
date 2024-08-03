@@ -159,83 +159,83 @@ export const reset_Passwords = async(req,res)=>{
 }
 
 //Function to get all  userData by admin
-export const allUser_Datas = async(req,res)=>{
-    try {
-        // const UserId = req.user._id
+// export const allUser_Datas = async(req,res)=>{
+//     try {
+//         // const UserId = req.user._id
 
-        // const users = await user.findOne({_id:UserId})
+//         // const users = await user.findOne({_id:UserId})
 
-        const users = await user.find()
+//         const users = await user.find()
 
-        if(users){
-            return res.status(200).json({status:'SUCCESS',message:"user Details",data:users})
-        }else{
-            return res.status(401).json({message:"user not found"})
-        }
+//         if(users){
+//             return res.status(200).json({status:'SUCCESS',message:"user Details",data:users})
+//         }else{
+//             return res.status(401).json({message:"user not found"})
+//         }
 
-    } catch (error) {
-        res.status(500).json({message:"Error in get user Data"})
+//     } catch (error) {
+//         res.status(500).json({message:"Error in get user Data"})
   
-    }
-}
+//     }
+// }
 
 //Function to get particular userData by authentication
-export const userDatas = async(req,res)=>{
-    try {
-        const UserId = req.user._id
+// export const userDatas = async(req,res)=>{
+//     try {
+//         const UserId = req.user._id
 
-        const users = await user.findOne({_id:UserId})
+//         const users = await user.findOne({_id:UserId})
 
-        if(users){
-            return res.status(200).json({status:'SUCCESS',message:"user Details",data:users})
-        }else{
-            return res.status(401).json({message:"user not found"})
-        }
+//         if(users){
+//             return res.status(200).json({status:'SUCCESS',message:"user Details",data:users})
+//         }else{
+//             return res.status(401).json({message:"user not found"})
+//         }
 
-    } catch (error) {
-        res.status(500).json({message:"Error in get user Data"})
+//     } catch (error) {
+//         res.status(500).json({message:"Error in get user Data"})
   
-    }
-}
+//     }
+// }
 
 //Function to aggregate the user and address collections by authentication
-export const joinTheCollection = async(req,res)=>{
+// export const joinTheCollection = async(req,res)=>{
 
-    try {
-        const userId = req.user._id
+//     try {
+//         const userId = req.user._id
 
-        // console.log('userId',userId);
+//         // console.log('userId',userId);
 
-        const isOldUser = await user.findById({_id:userId})
+//         const isOldUser = await user.findById({_id:userId})
 
-        // console.log('olduser',isOldUser);
+//         // console.log('olduser',isOldUser);
 
-        if(!isOldUser){
-            return res.status(200).json({message:"User not Exist"})
-        }
+//         if(!isOldUser){
+//             return res.status(200).json({message:"User not Exist"})
+//         }
 
-        const result = await user.aggregate([
-            {
-                $match:{
-                    _id:new mongoose.Types.ObjectId(isOldUser._id)
-                }
+//         const result = await user.aggregate([
+//             {
+//                 $match:{
+//                     _id:new mongoose.Types.ObjectId(isOldUser._id)
+//                 }
             
-            },
-            {
-                $lookup:{
-                    from:"addresses",
-                    localField:'_id',
-                    foreignField:'user_id',
-                    as:'Address Details'
-                }
-            }
-        ])
-        res.status(200).json({status:'SUCCESS',message:'Details',data:result})
-        // console.log(result);
-    } catch (error) {
-        res.status(500).json(error.message)
-    }
-}
+//             },
+//             {
+//                 $lookup:{
+//                     from:"addresses",
+//                     localField:'_id',
+//                     foreignField:'user_id',
+//                     as:'Address Details'
+//                 }
+//             }
+//         ])
+//         res.status(200).json({status:'SUCCESS',message:'Details',data:result})
+//         // console.log(result);
+//     } catch (error) {
+//         res.status(500).json(error.message)
+//     }
+// }
 
 //Function for add customer data to db by admin
 export const addUserData = async(req,res)=>{
