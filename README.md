@@ -1,7 +1,7 @@
 user register => http://localhost:4000/api/register
 user login => http://localhost:4000/api/login
 user forget password => http://localhost:4000/api/forget-password
-user reset password => http://localhost:4000/api/reset-passwords/65f2cadf63099f4382964637/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvd3poYXNhaTI1QGdtYWlsLmNvbSIsImlkIjoiNjVmMmNhZGY2MzA5OWY0MzgyOTY0NjM3IiwiaWF0IjoxNzE1MDg3MTU3LCJleHAiOjE3MTUwODg5NTd9.KAqj82S5CpXfn6p6ZryXkBj3tyRYid3jLZWQAuMNWx8
+user reset password => http://localhost:4000/api/reset-passwords/:id/:token
 add new user by admin => http://localhost:4000/api/adduserdata
 update user by admin => http://localhost:4000/api/update/6683a5a9557d4afc431ae476
 delete user by admin => http://localhost:4000/api/deletedata/668e65c001c5c8794ccd5491
