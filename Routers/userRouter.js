@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { register_NewUser,login_User ,forget_Password,reset_Passwords, 
-    joinTheCollection, userDatas, allUser_Datas, addUserData, updateUserData,
+     addUserData, updateUserData,
      getAllUserData,
      deleteUserData,
      getById} from '../Controllers/userController.js';
