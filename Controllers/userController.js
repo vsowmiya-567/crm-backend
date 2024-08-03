@@ -22,7 +22,7 @@ export const register_NewUser = async(req,res)=>{
             return res.status(401).json({message:'User already exist!'})
         }
 
-        const hashPassword = bcrypt.hash(password,10)
+        const hashPassword = await bcrypt.hash(password,10)
 
         const newUser = new user({
             fname,
@@ -34,14 +34,14 @@ export const register_NewUser = async(req,res)=>{
 
         })
         await newUser.save()
-        res.status(200).json({
+        return res.status(200).json({
             status: 'true',
             message:`New User ${newUser.fname} 
                      Registered Successfully`,
             data:newUser
         })
     } catch (error) {
-        res.status(500).json({message:'Error in Register'})
+        res.status(500).json(error.message)
     }
 }
 
@@ -52,6 +52,7 @@ export const login_User = async(req,res)=>{
         
         const oldUsers = await user.findOne({email:email})
 
+
         if(!oldUsers){
             // console.log("email",email);
             // console.log(password);
@@ -60,7 +61,7 @@ export const login_User = async(req,res)=>{
             .json({status:'false',message:"user not exist"})
         }
 
-        const isPasswordMatch = bcrypt.compare(password,oldUsers.password)
+        const isPasswordMatch = await bcrypt.compare(password,oldUsers.password)
 
         // console.log("pass",isPasswordMatch);
 
@@ -70,11 +71,7 @@ export const login_User = async(req,res)=>{
 
         const token = jwt.sign({_id:oldUsers._id},process.env.JWT_SECRETKEY)
 
-        console.log(token);
-
-        const link = "http://localhost:3000/login"
-
-        mail(email,link)
+        // console.log(token);
 
         res.status(200).json({status:'true', message:"Login Successfully",token:token})
 
@@ -96,14 +93,14 @@ export const forget_Password = async(req,res)=>{
             return res.status(401).json({message:"User Not Exist!!"})
         }
 
-        const token = jwt.sign({email:oldUser.email,_id:oldUser._id},
+        const token = await jwt.sign({email:oldUser.email,_id:oldUser._id},
                       process.env.JWT_SECRETKEY,{expiresIn:'30m'})
 
         const link = `http://localhost:3000/confirmpsw/${oldUser._id}/${token}`
 
         await mail(email,link)
 
-        res.status(200).json({status:'true',message:"reset link",data:token,id:oldUser._id})
+        return res.status(200).json({status:'true',message:"Reset link is sent to your Mail,Please check it",token:token,id:oldUser._id})
         // console.log("link----",link);
 
     } catch (error) {
@@ -118,14 +115,15 @@ export const reset_Passwords = async(req,res)=>{
         const {id,token} = req.params
 
         // console.log("req",req.params);
+        // console.log('id',id,'token',token);
 
-        const newPassword = req.body
+        const newPassword = req.body.newPassword
 
         // console.log("newPassword",newPassword);
 
         const oldUser = await user.findOne({_id:id})
 
-        console.log("oldUser",oldUser);
+        // console.log("oldUser",oldUser);
 
         if(!oldUser){
             return res.status(401).json({message:"User Not Exist!!"})
@@ -134,20 +132,20 @@ export const reset_Passwords = async(req,res)=>{
         try {
             
             const decode = jwt.verify(token,process.env.JWT_SECRETKEY)
-
+            
             // console.log("decode",decode);
 
             if(!decode){
                 return res.status(401).json({message:'token is missing'})
             }
 
-            const hashPassword = await bcrypt.hash(newPassword.password,10)
+            const hashPassword = await bcrypt.hash(newPassword,10)
 
-            console.log(hashPassword);
+            // console.log('hash',hashPassword);
     
             await user.findByIdAndUpdate({_id:id},{$set:{password:hashPassword}})
 
-            res.status(200).json({status:'true',message:"password updated"})
+            return res.status(200).json({status:'true',message:"password updated"})
 
         } catch (error) {
             res.status(500).json(error)
@@ -156,7 +154,7 @@ export const reset_Passwords = async(req,res)=>{
         }
 
     } catch (error) {
-        res.status(500).json({message:"Error in update password"})
+        res.status(500).json(error.message)
     }
 }
 
@@ -278,28 +276,18 @@ export const addUserData = async(req,res)=>{
 export const updateUserData = async(req,res)=>{
     try {
         const {fname,phone,email,address} = req.body
-
         const id = req.params.id
-
-        // console.log(req.body);
 
         console.log(id);
 
         const existingUser = await user.findById(id)
-
-        console.log("test");
-
-        console.log("existinguser",existingUser);
-
-        console.log(existingUser._id);
-
+        // console.log("existinguser",existingUser);
+        // console.log(existingUser._id);
 
         if(!existingUser){
             return res.status(200).json({message:'user not exist!'})
         }
-
-        // console.log(existingUser._id);
-              
+             
          const updateData = await user.findByIdAndUpdate(
             (existingUser._id),
             {
@@ -312,8 +300,6 @@ export const updateUserData = async(req,res)=>{
             },
         );
         
-        // console.log("update",updateData);
-
         // if(updateData){
         //     return console.log("success");
         // }
@@ -321,7 +307,7 @@ export const updateUserData = async(req,res)=>{
         await updateData.save()
 
         return res.status(200).json({
-            status:'SUCCESS',message:'User Detail updated successfully'
+            status:'true',message:'User Detail updated successfully'
         })
 
     } catch (error) {
@@ -335,6 +321,7 @@ export const getById = async(req,res)=>{
     // console.log(userData);
     return res.status(200).json({status:'true', data:userData})
 }
+
 //Function to read all data from db
 export const getAllUserData = async(req,res)=>{
     try {
@@ -351,20 +338,16 @@ export const getAllUserData = async(req,res)=>{
 export const deleteUserData = async(req,res)=>{
     try {
         const id = req.params.id
-
         // console.log("id",id);
-
-        const isOldUser = await user.findById(id)
-        
+        const isOldUser = await user.findById(id)        
         // console.log(isOldUser._id);
-
         const deleteData = await user.findByIdAndDelete({_id:isOldUser._id})      
         
         return res.status(200).json({
-            status:'SUCCESS',message:'User Data Deleted successfully'
+            status:'true',message:'User Data Deleted successfully'
         })
 
     } catch (error) {
-        res.status(400).json({status:'FAILED',error:error.message})
+        res.status(400).json({status:'false',error:error.message})
     }
 }
