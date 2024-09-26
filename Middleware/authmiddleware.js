@@ -6,10 +6,10 @@ dotenv.config()
 const authMiddleware = (role)=>{
    return async (req, res, next) => {
             try {
-                // const token = req.header('Authorization')
+                const token = req.header('Authorization')
                 // console.log(req.headers);
-                const token = req.headers.token
-                console.log('token1',token);
+                // const token = req.headers.token
+                // console.log('token1',token);
  
                 if (!token) {
                     res.status(401).json({ message: 'Token is Missing' })
@@ -22,7 +22,7 @@ const authMiddleware = (role)=>{
                 req.user = decoded
  
                 const isOldUser = await user.findById({_id:decoded._id})
-                console.log('isOldUser',isOldUser);
+                // console.log('isOldUser',isOldUser);
                 if(role != isOldUser.role){
                     res.status(401).json({ message: 'Unauthorized' })
                 }

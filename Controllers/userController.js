@@ -13,7 +13,7 @@ export const register_NewUser = async(req,res)=>{
         const { fname,email,password,phone,role,address} = req.body;
 
         if(!(fname ||email || password || phone || role ||address)){
-            return res.status(400).json({message:"firstname,Semail and password,phone,role are required"})
+            return res.status(400).json({message:"firstname,email and password,phone,role are required"})
         }
 
         const isExistingUser = await user.findOne({email})
@@ -298,16 +298,18 @@ export const updateUserData = async(req,res)=>{
                     address: address
                 }
             },
+            {new:true}
+           
         );
         
-        // if(updateData){
-        //     return console.log("success");
-        // }
+        if(updateData){
+            return console.log("success");
+        }
 
         await updateData.save()
 
         return res.status(200).json({
-            status:'true',message:'User Detail updated successfully'
+            status:'true',message:'User Detail updated successfully',data:updateData
         })
 
     } catch (error) {
