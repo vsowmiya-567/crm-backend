@@ -8,7 +8,7 @@ import addressRouter from './Routers/addressRouter.js'
 
 const app = express()
 const port = process.env.PORT
-app.use(cors())
+app.use(cors({origin:["http://localhost:3000","https://crms-clients.netlify.app/"]}))
 app.use(express.json())
 app.use('/api',userRouter)
 app.use('/api/address',addressRouter)
