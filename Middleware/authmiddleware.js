@@ -9,7 +9,7 @@ const authMiddleware = (role)=>{
                 const token = req.headers.authorization.split(" ")[1]
                 // console.log(req.headers);
                 // const token = req.headers.token
-                // console.log('-------token-------',token);
+                console.log('-------token-------',token);
  
                 if (!token) {
                     res.status(401).json({ message: 'Token is Missing' })

@@ -245,10 +245,12 @@ export const addUserData = async(req,res)=>{
 
         const existingUser = await user.find({email})
 
-        // console.log("existinguser",existingUser);
+        console.log("existinguser",existingUser);
 
         if(existingUser.length != 0){
+            console.log("user already Added");
             return res.status(200).json({message:"user already Added"})
+            
         }
 
         const newUser = new user({
